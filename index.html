@@ -1,0 +1,97 @@
+<html>
+    <head>
+      <script src="https://unpkg.com/vue"></script>
+      <link rel="stylesheet" href="tabs.css"/>
+    </head>
+    <body>
+        <div id="app">
+            <tabcontainer :data="tabsData"/>
+        </div>
+
+        <script type="x-template" id="tabcontainer-template">
+            <div class="tabscontainer">
+              <tabmenu :data="tabsArray" />
+              <tabcontent :data="tabsArray" />
+            </div>
+        </script>
+
+        <script type="x-template" id="tabmenu-template">
+          <ul>
+            <li class="tab-menu-item" v-for="item in data" :class="{ active : item.isActive }">
+              <span @click="handleActiveItem(item, data)">{{item.title}}</span>
+            </li>
+          </ul>
+        </script>
+
+        <script type="x-template" id="tabcontent-template">
+          <div class="tab-content-wrapper">
+            <div class="tabitem" v-for="item in data" v-show="item.isActive" v-html="item.content"></div>
+          </div>
+        </script>
+
+        <script>
+
+          Vue.component('tabcontent', {
+            template:'#tabcontent-template',
+            props: {
+              data: Array
+            }
+          });
+
+          Vue.component('tabmenu', {
+            template:'#tabmenu-template',
+            props: {
+              data: Array
+            },
+            methods: {
+              handleActiveItem: function(passedItem, completeArray){
+                //Loop over the items in the COMPLETE array
+                completeArray.forEach(function(item) {
+                  //Set item to active where item matches the passed item. This wil fire the component lifecycle and rerender the component with the new data
+                  item.isActive = (item == passedItem )
+                })
+              }
+            }
+          });
+
+          Vue.component('tabcontainer', {
+            template:'#tabcontainer-template',
+            props: {
+              data: {
+                type: Array,
+                required: true
+              }
+            },
+            data: function(){
+              return {
+                tabsArray: []
+              }
+            },
+            created: function(){
+              //Fill array with data from api + add key-value pair to each object in the array
+              var addIsActiveToArray = this.data.map(function(item){
+                var obj = Object.assign({}, item);
+                obj.isActive = false;
+                return obj;
+              });
+
+              //Set first item of array to active
+              addIsActiveToArray[0].isActive = true;
+
+              //Assign the new array to local variable
+              this.tabsArray = addIsActiveToArray
+            }
+          });
+
+          new Vue({
+            el: '#app',
+            data: {
+              tabsData: [
+                {title:'title 1', content:'<h5>This is an awesome title</h5><p>This is awesome content</p>'},
+                {title:'title 2', content:'<p>And some more content. Awyeah</p>'},
+              ]
+            }
+          })
+        </script>
+    </body>
+</html>

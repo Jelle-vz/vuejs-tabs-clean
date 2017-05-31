@@ -1,0 +1,27 @@
+.tabscontainer {
+  width: 500px;
+}
+
+.tabscontainer ul {
+  padding: 0;
+  margin: 0;
+}
+
+.tabscontainer ul li {
+  list-style: none;
+  display: inline-block;
+  padding: 5px 10px;
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color:#CCC;
+}
+
+.tabscontainer ul li:not(.active) {
+  background-color: #CCC;
+  cursor: pointer;
+}
+
+.tab-content-wrapper {
+  border: 1px solid #CCC;
+  padding: 25px;
+}
